@@ -34,8 +34,8 @@ namespace Machina.FFXIV
         /// <summary>
         /// Specifies the type of monitor to use - Raw socket or WinPCap
         /// </summary>
-        public TCPNetworkMonitor.NetworkMonitorType MonitorType
-        { get; set; } = TCPNetworkMonitor.NetworkMonitorType.RawSocket;
+        public NetworkMonitorType MonitorType
+        { get; set; } = NetworkMonitorType.RawSocket;
 
         /// <summary>
         /// Specifies the Process ID that is generating or receiving the traffic.  Either ProcessID or WindowName must be specified.
@@ -50,46 +50,33 @@ namespace Machina.FFXIV
         { get; set; } = "";
 
         #region Message Delegates section
-        public delegate void MessageReceivedDelegate(long epoch, byte[] message);
 
         /// <summary>
         /// Specifies the delegate that is called when data is received and successfully decoded/
         /// </summary>
-        public MessageReceivedDelegate MessageReceived = null;
-
-        public void OnMessageReceived(long epoch, byte[] message)
+        public event MessageReceivedDelegate MessageReceived
         {
-            MessageReceived?.Invoke(epoch, message);
+            add => _parser.MessageReceived += value;
+            remove => _parser.MessageReceived -= value;
         }
-        
-        public delegate void MessageSentDelegate(long epoch, byte[] message);
 
-        public MessageSentDelegate MessageSent = null;
-
-        public void OnMessageSent(long epoch, byte[] message)
+        public event MessageSentDelegate MessageSent
         {
-            MessageSent?.Invoke(epoch, message);
+            add => _parser.MessageSent += value;
+            remove => _parser.MessageSent -= value;
         }
 
         #endregion
 
         private TCPNetworkMonitor _monitor = null;
-        private Dictionary<string, FFXIVBundleDecoder> _sentDecoders = new Dictionary<string, FFXIVBundleDecoder>();
-        private Dictionary<string, FFXIVBundleDecoder> _receivedDecoders = new Dictionary<string, FFXIVBundleDecoder>();
+        private readonly FFXIVNetworkParser _parser = new FFXIVNetworkParser();
 
         /// <summary>
         /// Validates the parameters and starts the monitor.
         /// </summary>
         public void Start()
         {
-            if (_monitor != null)
-            {
-                _monitor.Stop();
-                _monitor = null;
-            }
-
-            if (MessageReceived == null)
-                throw new ArgumentException("MessageReceived delegate must be specified.");
+            Stop();
 
             _monitor = new TCPNetworkMonitor();
             _monitor.ProcessID = ProcessID;
@@ -98,8 +85,7 @@ namespace Machina.FFXIV
             _monitor.MonitorType = MonitorType;
             _monitor.LocalIP = LocalIP;
 
-            _monitor.DataSent = (string connection, byte[] data) => ProcessSentMessage(connection, data);
-            _monitor.DataReceived = (string connection, byte[] data) => ProcessReceivedMessage(connection, data);
+            _parser.WorkOn(_monitor);
 
             _monitor.Start();
         }
@@ -109,38 +95,9 @@ namespace Machina.FFXIV
         /// </summary>
         public void Stop()
         {
+            _parser.Stop(); ;
             _monitor?.Stop();
             _monitor = null;
-
-            _sentDecoders.Clear();
-            _receivedDecoders.Clear();
-        }
-
-        public void ProcessSentMessage(string connection, byte[] data)
-        {
-            Tuple<long, byte[]> message;
-            if (!_sentDecoders.ContainsKey(connection))
-                _sentDecoders.Add(connection, new FFXIVBundleDecoder());
-
-            _sentDecoders[connection].StoreData(data);
-            while ((message = _sentDecoders[connection].GetNextFFXIVMessage()) != null)
-            {
-                OnMessageSent(message.Item1, message.Item2);
-            }
-        }
-
-        public void ProcessReceivedMessage(string connection, byte[] data)
-        {
-            Tuple<long, byte[]> message;
-            if (!_receivedDecoders.ContainsKey(connection))
-                _receivedDecoders.Add(connection, new FFXIVBundleDecoder());
-
-            _receivedDecoders[connection].StoreData(data);
-            while ((message = _receivedDecoders[connection].GetNextFFXIVMessage()) != null)
-            {
-                OnMessageReceived(message.Item1, message.Item2);
-            }
-
         }
     }
 }

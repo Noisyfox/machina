@@ -19,7 +19,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <DebugSymbols>true</DebugSymbols>
@@ -41,6 +41,7 @@
     <Compile Include="Headers\IPv6Header.cs" />
     <Compile Include="Headers\UDPHeader.cs" />
     <Compile Include="FirewallManager.cs" />
+    <Compile Include="ITCPNetworkMonitor.cs" />
     <Compile Include="TCPNetworkMonitor.cs" />
     <Compile Include="ProcessTCPInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="TCPDecoder.cs" />
     <Compile Include="Headers\TCPHeader.cs" />
     <Compile Include="TCPConnection.cs" />
+    <Compile Include="TCPNetworkMonitorCore.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>

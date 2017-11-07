@@ -38,6 +38,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FFXIVNetworkParser.cs" />
     <Compile Include="Headers\FFXIMessageHeader.cs" />
     <Compile Include="FFXIVBundleDecoder.cs" />
     <Compile Include="Headers\FFXIVBundleHeader.cs" />

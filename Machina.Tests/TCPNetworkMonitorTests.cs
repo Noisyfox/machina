@@ -20,7 +20,7 @@ namespace Machina.Tests
         {
             TCPNetworkMonitor monitor = new TCPNetworkMonitor();
             monitor.ProcessID = (uint)Process.GetCurrentProcess().Id;
-            monitor.MonitorType = TCPNetworkMonitor.NetworkMonitorType.RawSocket;
+            monitor.MonitorType = NetworkMonitorType.RawSocket;
             monitor.DataReceived += (string connection, byte[] data) => DataReceived(connection, data);
             monitor.DataSent += (string connection, byte[] data) => DataSent(connection, data);
 
