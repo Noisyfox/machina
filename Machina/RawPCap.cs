@@ -362,7 +362,7 @@ namespace Machina
                 StringBuilder errorBuffer = new StringBuilder(PCAP_ERRBUF_SIZE);
 
                 // flags=0 turns off promiscous mode, which is not needed or desired.
-                _activeDevice.Handle = pcap_open(device.Name, 65536, 0, -1, IntPtr.Zero, errorBuffer);
+                _activeDevice.Handle = pcap_open(device.Name, 65536, 0, 1, IntPtr.Zero, errorBuffer);
                 if (_activeDevice.Handle == IntPtr.Zero)
                     throw new ApplicationException("RawPCap: Cannot open pcap interface [" + device.Name + "].  Error: " + errorBuffer.ToString());
 
@@ -427,7 +427,7 @@ namespace Machina
 
                     // note: buffer returned by pcap_next_ex is static and owned by pcap library, does not need to be freed.
                     int status = pcap_next_ex(_activeDevice.Handle, ref packetHeaderPtr, ref packetDataPtr);
-                    if (status == 0) // 500ms timeout
+                    if (status == 0) // timeout
                         continue;
                     else if (status == -1) // error
                     {
