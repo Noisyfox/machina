@@ -88,6 +88,7 @@ namespace Machina
 
         private List<IRawSocket> _sockets = new List<IRawSocket>();
         private List<TCPConnection> _connections = new List<TCPConnection>(2);
+        private RawSocketDataMonitor _dataMonitor = new RawSocketDataMonitor();
 
 
         private Thread _monitorThread = null;
@@ -190,10 +191,9 @@ namespace Machina
 
                     UpdateSockets();
 
-                    ProcessNetworkData();
-
-
-                    Thread.Sleep(30);
+                    _dataMonitor.BeginConsuming();
+                    while (ProcessNetworkData()) { }
+                    _dataMonitor.WaitForMoreData(30);
                 }
                 catch (ThreadAbortException)
                 {
@@ -260,6 +260,7 @@ namespace Machina
                         _sockets.Add(new RawPCap());
                     else
                         _sockets.Add(new RawSocket());
+                    _sockets.Last().OnDataAvailable = _dataMonitor.OnNewDataAvailable;
                     _sockets.Last().Create(_connections[i].LocalIP, UseSocketFilter ? _connections[i].RemoteIP : 0);
                 }
             }
@@ -283,17 +284,21 @@ namespace Machina
             }
         }
 
-        private void ProcessNetworkData()
+        private bool ProcessNetworkData()
         {
             int size;
             byte[] buffer;
+            bool didWork = false;
 
             for (int i = 0; i < _sockets.Count; i++)
                 while ((size = _sockets[i].Receive(out buffer)) > 0)
                 {
+                    didWork = true;
                     ProcessData(buffer, size);
                     _sockets[i].FreeBuffer(ref buffer);
                 }
+
+            return didWork;
         }
 
 
@@ -327,5 +332,43 @@ namespace Machina
             }
         }
 
+    }
+
+    class RawSocketDataMonitor
+    {
+        private long _counter = 0;
+        private long _counterAtConsuming = 0;
+
+        public void OnNewDataAvailable()
+        {
+            lock (this)
+            {
+                _counter++;
+                Monitor.PulseAll(this);
+            }
+        }
+
+        public void BeginConsuming()
+        {
+            lock (this)
+            {
+                _counterAtConsuming = _counter;
+            }
+        }
+
+        public bool WaitForMoreData(int timeoutMillis)
+        {
+            lock (this)
+            {
+                if (_counter != _counterAtConsuming)
+                {
+                    return true;
+                }
+
+                Monitor.Wait(this, timeoutMillis);
+
+                return _counter != _counterAtConsuming;
+            }
+        }
     }
 }

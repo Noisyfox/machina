@@ -209,6 +209,8 @@ namespace Machina
         }
         #endregion
 
+        public SocketDataAvailableDelegate OnDataAvailable { get; set; }
+
         public uint LocalIP
         { get; private set; }
         public uint RemoteIP
@@ -218,6 +220,7 @@ namespace Machina
         {
             LocalIP = localAddress;
             RemoteIP = remoteAddress;
+            _bufferFactory.AllocatedBufferAvailable = () => OnDataAvailable?.Invoke();
 
             Device device = GetAllDevices().FirstOrDefault(x =>
                 x.Addresses.Contains(localAddress));
@@ -231,6 +234,8 @@ namespace Machina
 
         public void Destroy()
         {
+            _bufferFactory.AllocatedBufferAvailable = null;
+
             try
             {
                 // stop pcap capture thread

@@ -35,6 +35,8 @@ namespace Machina
 
         private SocketState _socketState = new SocketState();
 
+        public SocketDataAvailableDelegate OnDataAvailable { get; set; }
+
         public uint LocalIP
         { get; private set; }
         public uint RemoteIP
@@ -44,6 +46,7 @@ namespace Machina
         {
             LocalIP = localAddress;
             RemoteIP = remoteAddress;
+            _socketState.bufferFactory.AllocatedBufferAvailable = () => OnDataAvailable?.Invoke();
 
             // set buffer
             _socketState.buffer = _socketState.bufferFactory.GetNextFreeBuffer(); 
@@ -74,6 +77,8 @@ namespace Machina
 
         public void Destroy()
         {
+            _socketState.bufferFactory.AllocatedBufferAvailable = null;
+
             lock (_socketState.socketLock)
             {
                 if (_socketState.socket != null)

@@ -5,11 +5,16 @@ using System.Text;
 
 namespace Machina
 {
+    public delegate void SocketDataAvailableDelegate();
+
     /// <summary>
     /// Defines the common public routines for raw socket capturea
     /// </summary>
     interface IRawSocket
     {
+        SocketDataAvailableDelegate OnDataAvailable
+        { get; set; }
+
         /// <summary>
         /// Returns the local IP address for which the raw socket is configured.
         /// </summary>

@@ -13,6 +13,10 @@ namespace Machina
     /// </summary>
     public class NetworkBufferFactory
     {
+        public delegate void AllocatedBufferAvailableDelegate();
+
+        public AllocatedBufferAvailableDelegate AllocatedBufferAvailable;
+
         /// <summary>
         /// Helper class to encapsulate each array
         /// </summary>
@@ -88,7 +92,10 @@ namespace Machina
         public void AddAllocatedBuffer(Buffer buffer)
         {
             if (buffer != null)
+            {
                 _allocatedBufferQueue.Enqueue(buffer);
+                AllocatedBufferAvailable?.Invoke();
+            }
         }
 
 
