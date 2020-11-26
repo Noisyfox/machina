@@ -20,13 +20,13 @@ namespace Machina.FFXIV.Headers.Opcodes.Tests
         }
 
         [TestMethod()]
-        public void SetVersionTest()
+        public void SetRegionTest()
         {
             var sut = new OpcodeManager();
 
-            sut.SetVersion(5.08f);
+            sut.SetRegion(GameRegionEnum.Korean);
 
-            Assert.AreEqual(5.08f, sut.Version);
+            Assert.AreEqual(GameRegionEnum.Korean, sut.GameRegion);
             Assert.AreEqual(sut.CurrentOpcodes["ActorControl142"], 0x142);
         }
     }

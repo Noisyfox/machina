@@ -1,4 +1,4 @@
-﻿// Machina.FFXIV ~ Server_AddStatusEffect.cs
+﻿// Machina.FFXIV ~ Server_UpdateHpMpTp.cs
 // 
 // Copyright © 2017 Ravahn - All Rights Reserved
 // 
@@ -17,37 +17,14 @@
 using System;
 using System.Runtime.InteropServices;
 
-
 namespace Machina.FFXIV.Headers
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct Server_StatusEffectAddEntry
-    {
-        public byte EffectIndex;
-        public byte unknown1;
-        public UInt16 EffectID;
-        public UInt16 unknown2;
-        public UInt16 unknown3;
-        public float duration;
-        public UInt32 SourceActorID;
-    }
-
-    [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public unsafe struct Server_AddStatusEffect
+    public struct Server_UpdateHpMpTp
     {
         public Server_MessageHeader MessageHeader; // 8 DWORDS
-        public UInt32 RelatedActionSequence;
-        public UInt32 ActorID;
-        public UInt32 CurrentHP;
-        public UInt32 MaxHP;
-        public UInt16 CurrentMP;
-        public UInt16 Unknown3;
-        public UInt16 MaxMP;
-        public UInt16 Unknown4;
-        public byte DamageShield;
-        public byte EffectCount;
-        public UInt16 Unknown6;
-        public fixed byte Effects[4 * 4 * 4];
-        public UInt32 Unknown7;
+        public UInt32 CurrentHp;
+        public UInt16 CurrentMp;
+        public UInt16 Unknown1; 
     }
 }

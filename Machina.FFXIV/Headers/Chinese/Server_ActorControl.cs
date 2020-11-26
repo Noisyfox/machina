@@ -17,7 +17,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Machina.FFXIV.Headers
+namespace Machina.FFXIV.Headers.Chinese
 {
     public enum Server_ActorControlCategory : UInt16
     {
