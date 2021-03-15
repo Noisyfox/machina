@@ -1,6 +1,6 @@
-﻿// Machina.FFXIV ~ Server_ActorGauge.cs
+﻿// Machina.FFXIV ~ Server_Waymark.cs
 // 
-// Copyright © 2017 Ravahn - All Rights Reserved
+// Copyright © 2020 Ravahn - All Rights Reserved
 // 
 //This program is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by
@@ -17,28 +17,33 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Machina.FFXIV.Headers.Korean
+namespace Machina.FFXIV.Headers.Chinese
 {
-    // Thanks to Discord user Wintermute for decoding this
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public unsafe struct Server_PresetWaymark
+    public unsafe struct Server_Waymark
     {
-        public enum WaymarkStatusEnum : UInt32
+        public enum WaymarkEnum : byte
         {
-            A = 0x1,
-            B = 0x2,
-            C = 0x4,
-            D = 0x8,
-            One = 0x10,
-            Two = 0x20,
-            Three = 0x40,
-            Four = 0x80,
+            A = 0x0,
+            B = 0x1,
+            C = 0x2,
+            D = 0x3,
+            One = 0x4,
+            Two = 0x5,
+            Three = 0x6,
+            Four = 0x7,
         };
-
+        public enum StatusEnum : byte
+        {
+            Off = 0,
+            On = 1
+        };
         public Server_MessageHeader MessageHeader; // 8 DWORDS
-        public WaymarkStatusEnum WaymarkStatus;
-        public fixed Int32 PosX[8];// Xints[0] has X of waymark A, Xints[1] X of B, etc.
-        public fixed Int32 PosY[8];// To calculate 'float' coords from these you cast them to float and then divide by 1000.0
-        public fixed Int32 PosZ[8];
+        public WaymarkEnum Waymark;
+        public StatusEnum Status;
+        public UInt16 unknown;
+        public Int32 PosX;
+        public Int32 PosZ;// To calculate 'float' coords from these you cast them to float and then divide by 1000.0
+        public Int32 PosY;
     }
 }

@@ -1,4 +1,4 @@
-﻿// Machina.FFXIV ~ Server_ActorGauge.cs
+﻿// Machina.FFXIV ~ Server_StatusEffectList.cs
 // 
 // Copyright © 2017 Ravahn - All Rights Reserved
 // 
@@ -19,26 +19,23 @@ using System.Runtime.InteropServices;
 
 namespace Machina.FFXIV.Headers.Korean
 {
-    // Thanks to Discord user Wintermute for decoding this
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public unsafe struct Server_PresetWaymark
+    public unsafe struct Server_StatusEffectList2
     {
-        public enum WaymarkStatusEnum : UInt32
-        {
-            A = 0x1,
-            B = 0x2,
-            C = 0x4,
-            D = 0x8,
-            One = 0x10,
-            Two = 0x20,
-            Three = 0x40,
-            Four = 0x80,
-        };
-
         public Server_MessageHeader MessageHeader; // 8 DWORDS
-        public WaymarkStatusEnum WaymarkStatus;
-        public fixed Int32 PosX[8];// Xints[0] has X of waymark A, Xints[1] X of B, etc.
-        public fixed Int32 PosY[8];// To calculate 'float' coords from these you cast them to float and then divide by 1000.0
-        public fixed Int32 PosZ[8];
+        public uint Unknown3;
+        public byte JobID;
+        public byte Level1;
+        public byte Level2;
+        public byte Level3;
+        public uint CurrentHP;
+        public uint MaxHP;
+        public ushort CurrentMP;
+        public ushort MaxMP;
+        public ushort Unknown1; // used to be TP
+        public byte DamageShield;
+        public byte Unknown2;
+        public fixed byte Effects[30 * 3 * 4];
+        // 4 bytes padding at end?
     }
 }
