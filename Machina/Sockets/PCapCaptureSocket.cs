@@ -65,7 +65,7 @@ namespace Machina.Sockets
                 StringBuilder errorBuffer = new StringBuilder(PCAP_ERRBUF_SIZE);
 
                 // flags=0 turns off promiscous mode, which is not needed or desired.
-                _activeDevice.Handle = pcap_open(device.Name, 65536, PCAP_OPENFLAG_MAX_RESPONSIVENESS, 100, IntPtr.Zero, errorBuffer);
+                _activeDevice.Handle = pcap_open(device.Name, 65536, PCAP_OPENFLAG_MAX_RESPONSIVENESS, -1, IntPtr.Zero, errorBuffer);
                 if (_activeDevice.Handle == IntPtr.Zero)
                     throw new PcapException($"PCapCaptureSocket: Cannot open pcap interface [{device.Name}].  Error: {errorBuffer}");
 
