@@ -26,6 +26,8 @@ namespace Machina
 {
     public class ConnectionManager : IDisposable
     {
+        public SocketDataAvailableDelegate OnDataAvailable { get; set; }
+
         public TCPNetworkMonitorConfig Config { get; } = new TCPNetworkMonitorConfig();
         public IList<TCPConnection> Connections { get; } = new List<TCPConnection>(2);
 
@@ -64,6 +66,7 @@ namespace Machina
                     connection.Socket = Config.MonitorType == NetworkMonitorType.WinPCap ?
                         new PCapCaptureSocket() :
                         (ICaptureSocket)new RawCaptureSocket();
+                    connection.Socket.OnDataAvailable = () => OnDataAvailable?.Invoke();
 
                     connection.Socket.StartCapture(Connections[i].LocalIP, Config.UseRemoteIpFilter ? Connections[i].RemoteIP : 0);
                 }

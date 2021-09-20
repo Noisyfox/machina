@@ -34,6 +34,8 @@ namespace Machina.Sockets
         private Task _monitorTask;
         private CancellationTokenSource _tokenSource;
         private bool _disposedValue;
+        public SocketDataAvailableDelegate OnDataAvailable { get; set; }
+
 
         public void StartCapture(uint localAddress, uint remoteAddress = 0)
         {
@@ -215,6 +217,7 @@ namespace Machina.Sockets
                             Marshal.Copy(packetDataPtr + layer2Length, buffer, 0, allocatedSize);
 
                             _pendingBuffers.Enqueue(new Tuple<byte[], int>(buffer, allocatedSize));
+                            OnDataAvailable?.Invoke();
                         }
                     }
                 }

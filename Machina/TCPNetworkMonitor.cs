@@ -75,8 +75,14 @@ namespace Machina
         private readonly ConnectionManager _connectionManager = new ConnectionManager();
         private Task _monitorTask;
         private CancellationTokenSource _tokenSource;
+        private RawSocketDataMonitor _dataMonitor = new RawSocketDataMonitor();
 
         private bool _disposedValue;
+
+        public TCPNetworkMonitor()
+        {
+            _connectionManager.OnDataAvailable = _dataMonitor.OnNewDataAvailable;
+        }
 
         /// <summary>
         /// Validates the parameters and starts the monitor.
@@ -98,6 +104,7 @@ namespace Machina
         public void Stop()
         {
             _tokenSource?.Cancel();
+            _dataMonitor.OnNewDataAvailable();
 
             if (_monitorTask != null)
             {
@@ -122,9 +129,12 @@ namespace Machina
                 {
                     _connectionManager.Refresh();
 
-                    ProcessNetworkData();
-
-                    Task.Delay(30, token).Wait(token);
+                    _dataMonitor.BeginConsuming();
+                    while (ProcessNetworkData() && !token.IsCancellationRequested) { }
+                    if (!token.IsCancellationRequested)
+                    {
+                        _dataMonitor.WaitForMoreData(30);
+                    }
                 }
             }
             catch (OperationCanceledException)
@@ -137,10 +147,11 @@ namespace Machina
             }
         }
 
-        private void ProcessNetworkData()
+        private bool ProcessNetworkData()
         {
             byte[] tcpbuffer;
             byte[] payloadBuffer;
+            bool didWork = false;
 
             for (int i = 0; i < _connectionManager.Connections.Count; i++)
             {
@@ -149,6 +160,7 @@ namespace Machina
 
                 while ((data = connection.Socket.Receive()).Size > 0)
                 {
+                    didWork = true;
                     connection.IPDecoderSend.FilterAndStoreData(data.Buffer, data.Size);
 
                     while ((tcpbuffer = connection.IPDecoderSend.GetNextIPPayload()) != null)
@@ -167,6 +179,46 @@ namespace Machina
                     }
 
                     BufferCache.ReleaseBuffer(data.Buffer);
+                }
+            }
+
+            return didWork;
+        }
+
+        class RawSocketDataMonitor
+        {
+            private long _counter = 0;
+            private long _counterAtConsuming = 0;
+
+            public void OnNewDataAvailable()
+            {
+                lock (this)
+                {
+                    _counter++;
+                    Monitor.PulseAll(this);
+                }
+            }
+
+            public void BeginConsuming()
+            {
+                lock (this)
+                {
+                    _counterAtConsuming = _counter;
+                }
+            }
+
+            public bool WaitForMoreData(int timeoutMillis)
+            {
+                lock (this)
+                {
+                    if (_counter != _counterAtConsuming)
+                    {
+                        return true;
+                    }
+
+                    Monitor.Wait(this, timeoutMillis);
+
+                    return _counter != _counterAtConsuming;
                 }
             }
         }

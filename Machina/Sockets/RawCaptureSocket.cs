@@ -33,6 +33,7 @@ namespace Machina.Sockets
         private bool _disposedValue;
 
         private static readonly bool _isWindows = IsWindows();
+        public SocketDataAvailableDelegate OnDataAvailable { get; set; }
 
         public void StartCapture(uint localAddress, uint remoteAddress = 0)
         {
@@ -137,7 +138,10 @@ namespace Machina.Sockets
                     _ = _socket.BeginReceive(_currentBuffer, 0, _currentBuffer.Length, SocketFlags.None, new AsyncCallback(OnReceive), null);
 
                     if (received > 0)
+                    {
                         _pendingBuffers.Enqueue(new Tuple<byte[], int>(buffer, received));
+                        OnDataAvailable?.Invoke();
+                    }
                 }
             }
             catch (ObjectDisposedException)

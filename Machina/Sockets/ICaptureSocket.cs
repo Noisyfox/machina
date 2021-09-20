@@ -17,11 +17,16 @@ using System;
 
 namespace Machina.Sockets
 {
+    public delegate void SocketDataAvailableDelegate();
+
     /// <summary>
     /// Defines the common public routines for raw socket capturea
     /// </summary>
     internal interface ICaptureSocket : IDisposable
     {
+        SocketDataAvailableDelegate OnDataAvailable
+        { get; set; }
+
         /// <summary>
         /// Initializes the raw socket and starts the capture process
         ///   Note that remoteAddress can be used to significantly improve the reliability of capture of active connections by
