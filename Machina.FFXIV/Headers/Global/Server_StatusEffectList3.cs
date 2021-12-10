@@ -13,30 +13,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see<http://www.gnu.org/licenses/>.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Runtime.InteropServices;
 
-namespace Machina.FFXIV.Headers.Opcodes.Tests
+namespace Machina.FFXIV.Headers
 {
-    [TestClass()]
-    public class OpcodeManagerTests
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public unsafe struct Server_StatusEffectList3
     {
-        [TestMethod()]
-        public void OpcodeManagerTest()
-        {
-            OpcodeManager sut = new OpcodeManager();
-
-            Assert.IsNotNull(sut);
-        }
-
-        [TestMethod()]
-        public void SetRegionTest()
-        {
-            OpcodeManager sut = new OpcodeManager();
-
-            sut.SetRegion(GameRegion.Korean);
-
-            Assert.AreEqual(GameRegion.Korean, sut.GameRegion);
-            Assert.IsTrue(sut.CurrentOpcodes["ActorControl"] > 0);
-        }
+        public Server_MessageHeader MessageHeader; // 8 DWORDS
+        public fixed byte Effects[30 * 3 * 4];
     }
 }

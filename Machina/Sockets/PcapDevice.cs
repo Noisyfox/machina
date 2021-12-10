@@ -27,7 +27,7 @@ namespace Machina.Sockets
         public string Description { get; internal set; }
         public IList<uint> Addresses { get; internal set; }
 
-        public static unsafe IList<PcapDevice> GetAllDevices()
+        public static unsafe IList<PcapDevice> GetAllDevices(string source, ref pcap_rmtauth auth)
         {
             List<PcapDevice> deviceList = new List<PcapDevice>();
             IntPtr deviceListPtr = IntPtr.Zero;
@@ -36,7 +36,7 @@ namespace Machina.Sockets
             try
             {
                 StringBuilder errorBuffer = new StringBuilder(PCAP_ERRBUF_SIZE);
-                int returnCode = pcap_findalldevs(ref deviceListPtr, errorBuffer);
+                int returnCode = pcap_findalldevs_ex(source, ref auth, ref deviceListPtr, errorBuffer);
                 if (returnCode != 0)
                     throw new PcapException($"Cannot enumerate devices: [{errorBuffer}].");
 
@@ -60,7 +60,7 @@ namespace Machina.Sockets
                         if (address.addr != IntPtr.Zero)
                         {
                             sockaddr_in sockaddress = *(sockaddr_in*)address.addr;
-                            if (sockaddress.sin_family == AF_INET)
+                            if (sockaddress.sin_family == AF_INET || sockaddress.sin_family == AF_INET_BSD)
                                 device.Addresses.Add(sockaddress.sin_addr);
                         }
 
