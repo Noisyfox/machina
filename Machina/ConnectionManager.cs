@@ -98,7 +98,12 @@ namespace Machina
                 if (disposing)
                 {
                     for (int i = 0; i < Connections.Count; i++)
+                    {
+                        // Note: Do not call Trace in Dispose()
+                        Connections[i].Socket?.StopCapture();
                         Connections[i].Socket?.Dispose();
+                        Connections[i].Socket = null;
+                    }
                     Connections.Clear();
                 }
 

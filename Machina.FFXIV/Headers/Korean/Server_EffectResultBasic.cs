@@ -13,22 +13,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see<http://www.gnu.org/licenses/>.
 
-using System.Buffers;
+using System.Runtime.InteropServices;
 
-namespace Machina.Infrastructure
+
+namespace Machina.FFXIV.Headers.Korean
 {
-    public static class BufferCache
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    public unsafe struct Server_EffectResultBasic
     {
-        private static readonly int BUFFER_LENGTH = (1024 * 64) + 1;
-
-        public static byte[] AllocateBuffer()
-        {
-            return ArrayPool<byte>.Shared.Rent(BUFFER_LENGTH);
-        }
-
-        public static void ReleaseBuffer(byte[] buffer)
-        {
-            ArrayPool<byte>.Shared.Return(buffer);
-        }
+        public Server_MessageHeader MessageHeader; // 8 DWORDS
+        public uint Unknown1;
+        public uint RelatedActionSequence;
+        public uint ActorID;
+        public uint CurrentHP;
+        public uint Unknown2;
+        public ushort Unknown3;
+        public ushort Unknown4;
     }
 }
