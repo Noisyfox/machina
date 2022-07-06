@@ -140,7 +140,7 @@ namespace Machina.Sockets
                     }
 
                     _ = _socket.BeginReceive(_currentBuffer, 0, _currentBuffer.Length, SocketFlags.None, new AsyncCallback(OnReceive), null);
-                    
+
                     if (buffer != null)
                     {
                         _pendingBuffers.Enqueue(buffer);
@@ -164,10 +164,12 @@ namespace Machina.Sockets
             {
                 _currentBuffer = null;
             }
-
-            while (_pendingBuffers.TryDequeue(out byte[] _))
+            if (_pendingBuffers?.Count > 0)
             {
+                while (_pendingBuffers.TryDequeue(out byte[] _))
+                {
 
+                }
             }
         }
 

@@ -61,13 +61,22 @@ namespace Machina.FFXIV
         { get; set; }
 
         /// <summary>
+        /// The window name to use for game detection.
+        /// </summary>
+        public string WindowName
+        { get; set; } = "FINAL FANTASY XIV";
+
+        /// <summary>
         /// This class keeps the information needed to authenticate the user on a remote machine or read a local file via PCap.
         /// The remote machine can either grant or refuse the access according to the information provided. In case the NULL authentication is required, both 'username' and 'password' can be NULL pointers.
         /// </summary>
         public TCPNetworkMonitorConfig.RPCapConf RPCap
         { get; set; } = new TCPNetworkMonitorConfig.RPCapConf();
 
-        public string FFXIVDX11ExecutablePath
+        public Oodle.OodleImplementation OodleImplementation
+        { get; set; } = Oodle.OodleImplementation.Ffxiv;
+
+        public string OodlePath
         { get; set; } = @"C:\Program Files (x86)\FINAL FANTASY XIV - A Realm Reborn\game\ffxiv_dx11.exe";
 
         #region Message Delegates section
@@ -118,7 +127,7 @@ namespace Machina.FFXIV
             _monitor.Config.ProcessID = ProcessID;
             _monitor.Config.ProcessIDList = ProcessIDList;
             if (_monitor.Config.ProcessID == 0)
-                _monitor.Config.WindowName = "FINAL FANTASY XIV";
+                _monitor.Config.WindowName = WindowName;
             _monitor.Config.MonitorType = MonitorType;
             _monitor.Config.LocalIP = LocalIP;
             _monitor.Config.UseRemoteIpFilter = UseRemoteIpFilter;
@@ -127,8 +136,7 @@ namespace Machina.FFXIV
             _monitor.DataSentEventHandler = (TCPConnection connection, byte[] data) => ProcessSentMessage(connection, data);
             _monitor.DataReceivedEventHandler = (TCPConnection connection, byte[] data) => ProcessReceivedMessage(connection, data);
 
-            // initialize Oodle static
-            FFXIVOodle_Native.Initialize(FFXIVDX11ExecutablePath);
+            Oodle.OodleFactory.SetImplementation(OodleImplementation, OodlePath);
 
             _monitor.Start();
         }
