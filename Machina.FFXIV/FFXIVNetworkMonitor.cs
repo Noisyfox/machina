@@ -136,7 +136,7 @@ namespace Machina.FFXIV
             _monitor.DataSentEventHandler = (TCPConnection connection, byte[] data) => ProcessSentMessage(connection, data);
             _monitor.DataReceivedEventHandler = (TCPConnection connection, byte[] data) => ProcessReceivedMessage(connection, data);
 
-            Oodle.OodleFactory.SetImplementation(OodleImplementation, OodlePath);
+            Oodle.OodleFactory.SetSuggestedImplementation(OodleImplementation, OodlePath);
 
             _monitor.Start();
         }
