@@ -17,10 +17,10 @@ using System;
 
 namespace Machina.FFXIV.Oodle
 {
-    public class Oodle
+    public class OodleUDPWrapper : IOodleWrapper
     {
-        private const byte HashtableBits = 19;
-        private const int WindowSize = 0x16000;
+        private const byte HashtableBits = 17; // was 19 pre-OodleTCP era
+        private const int WindowSize = 0x100000; // was 0x16000 pre-OodleTCP era
 
         private readonly byte[] _state;
         private readonly byte[] _shared;
@@ -28,7 +28,7 @@ namespace Machina.FFXIV.Oodle
 
         private readonly IOodleNative _oodleNative;
 
-        public Oodle(IOodleNative native)
+        public OodleUDPWrapper(IOodleNative native)
         {
             _oodleNative = native;
 
