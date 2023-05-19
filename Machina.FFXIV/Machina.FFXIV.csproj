@@ -60,6 +60,15 @@
     <AssemblyOriginatorKeyFile>Ravahn.Machina.Keyfile.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='NuGet|netstandard2.0|AnyCPU'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="Ravahn.Machina.Keyfile.snk" />
   </ItemGroup>
