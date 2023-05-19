@@ -30,10 +30,18 @@
         <PackageProjectUrl>https://github.com/ravahn/machina</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
+    
+    <ItemGroup>
+      <Compile Remove="Deucalion\Distrib\**" />
+      <EmbeddedResource Remove="Deucalion\Distrib\**" />
+      <None Remove="Deucalion\Distrib\**" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Remove="Deucalion\DeucalionInjector.cs" />
+    </ItemGroup>
  
     <ItemGroup>
-        <None Remove="Deucalion\Distrib\deucalion-0.9.3.dll" />
-        <None Remove="Deucalion\Distrib\deucalion-debug.dll" />
         <None Remove="Ravahn.Machina.Keyfile.snk" />
     </ItemGroup>
 
@@ -73,7 +81,6 @@
     <None Remove="Ravahn.Machina.Keyfile.snk" />
   </ItemGroup>
     <ItemGroup>
-        <EmbeddedResource Include="Deucalion\Distrib\deucalion-0.9.3.dll" />
         <EmbeddedResource Include="Headers\Opcodes\Chinese.txt" />
         <EmbeddedResource Include="Headers\Opcodes\Global.txt" />
         <EmbeddedResource Include="Headers\Opcodes\Korean.txt" />

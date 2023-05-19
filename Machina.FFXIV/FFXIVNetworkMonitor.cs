@@ -133,10 +133,10 @@ namespace Machina.FFXIV
                 if (ProcessID == 0)
                     throw new ArgumentException("ProcessID must be specified for Deucalion.");
 
-                string library = DeucalionInjector.ExtractLibrary();
+                //string library = DeucalionInjector.ExtractLibrary();
 
                 // Note: if InjectLibrary fails, continue attempting to read from the game.  it is possible the library was already injected.
-                _ = DeucalionInjector.InjectLibrary((int)ProcessID, library);
+                //_ = DeucalionInjector.InjectLibrary((int)ProcessID, library);
 
                 _deucalionClient = new DeucalionClient();
                 _deucalionClient.MessageSent = (message) => ProcessDeucalionMessage(message, true);
