@@ -86,7 +86,7 @@ namespace Machina.Decoders
 
             if (buffer.Length < size)
             {
-                Trace.WriteLine($"IPDecoder: Buffer length is less than specified size.  Size=[{size}], Length=[{buffer.Length}]", "DEBUG-MACHINA");
+                Trace.WriteLine($"IPDecoder: Buffer length is less than specified size.  Size=[{size}], Length=[{buffer.Length}]", "FOX-DEBUG-MACHINA");
                 return;
             }
 
@@ -94,7 +94,7 @@ namespace Machina.Decoders
             {
                 while (offset < size - sizeof(IPv4Header))
                 {
-                    //Trace.WriteLine($"IPDecoder: Processing Offset: {offset} of {size} bytes for buffer {((UInt64)ptr).ToString("X8")}.", "DEBUG-MACHINA");
+                    //Trace.WriteLine($"IPDecoder: Processing Offset: {offset} of {size} bytes for buffer {((UInt64)ptr).ToString("X8")}.", "FOX-DEBUG-MACHINA");
 
                     // first four bits (network order) of IPv4 and IPv6 is the protocol version
                     byte version = (byte)((ptr + offset)[0] >> 4);
@@ -103,7 +103,7 @@ namespace Machina.Decoders
                         // TODO: IP6 packets, and mixed IP4/IP6, need to be tested with real-world data.
                         if (offset + sizeof(IPv6Header) > size)
                         {
-                            Trace.WriteLine($"IPDecoder: IP6 Packet too small for header. offset: {offset}, size: {size}", "DEBUG-MACHINA");
+                            Trace.WriteLine($"IPDecoder: IP6 Packet too small for header. offset: {offset}, size: {size}", "FOX-DEBUG-MACHINA");
                             return;
                         }
                         IPv6Header header6 = *(IPv6Header*)(ptr + offset);
@@ -112,7 +112,7 @@ namespace Machina.Decoders
                         if (header6.PayloadLength * 8 > size - offset - sizeof(IPv6Header))
                         {
                             Trace.WriteLine("IPDecoder: IP6 Packet too small for payload. payload length: " +
-                                $"{header6.payload_length * 8}, Buffer: {size}, offset: {offset}", "DEBUG-MACHINA");
+                                $"{header6.payload_length * 8}, Buffer: {size}, offset: {offset}", "FOX-DEBUG-MACHINA");
                             return;
                         }
 
@@ -122,7 +122,7 @@ namespace Machina.Decoders
                     }
                     else if (version != 4)
                     {
-                        Trace.WriteLine($"IPDecoder: IP protocol version is neither 4 nor 6. Version is {version}", "DEBUG-MACHINA");
+                        Trace.WriteLine($"IPDecoder: IP protocol version is neither 4 nor 6. Version is {version}", "FOX-DEBUG-MACHINA");
                         return;
                     }
 
@@ -139,12 +139,12 @@ namespace Machina.Decoders
                         return;
                     if (packetLength > 65535)
                     {
-                        Trace.WriteLine($"IPDecoder: Invalid packet length [{packetLength}].", "DEBUG-MACHINA");
+                        Trace.WriteLine($"IPDecoder: Invalid packet length [{packetLength}].", "FOX-DEBUG-MACHINA");
                         return;
                     }
                     if (packetLength > size - offset)
                     {
-                        Trace.WriteLine($"IPDecoder: buffer too small to hold complete packet.  Packet length is [{packetLength}], remaining buffer is [{size - offset}].", "DEBUG-MACHINA");
+                        Trace.WriteLine($"IPDecoder: buffer too small to hold complete packet.  Packet length is [{packetLength}], remaining buffer is [{size - offset}].", "FOX-DEBUG-MACHINA");
                         return;
                     }
 

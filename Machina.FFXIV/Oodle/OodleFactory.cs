@@ -58,7 +58,7 @@ namespace Machina.FFXIV.Oodle
                         {
                             if (File.Exists(p))
                             {
-                                Trace.WriteLine($"{nameof(OodleFactory)}: Found oddle dll at {p}, loading...", "DEBUG-MACHINA");
+                                Trace.WriteLine($"{nameof(OodleFactory)}: Found oddle dll at {p}, loading...", "FOX-DEBUG-MACHINA");
 
                                 o.Initialize(p);
                                 if (o.Initialized)
@@ -66,17 +66,17 @@ namespace Machina.FFXIV.Oodle
                                     // Success!
                                     _oodleLibAutoDetected = true;
                                     _oodleNative = o;
-                                    Trace.WriteLine($"{nameof(OodleFactory)}: Oddle dll {p} successfully loaded", "DEBUG-MACHINA");
+                                    Trace.WriteLine($"{nameof(OodleFactory)}: Oddle dll {p} successfully loaded", "FOX-DEBUG-MACHINA");
                                     return;
                                 }
 
-                                Trace.WriteLine($"{nameof(OodleFactory)}: Oddle dll {p} failed to load", "DEBUG-MACHINA");
+                                Trace.WriteLine($"{nameof(OodleFactory)}: Oddle dll {p} failed to load", "FOX-DEBUG-MACHINA");
                             }
                         }
 
                         // Cannot auto detect
                         _oodleLibAutoDetectEnabled = false;
-                        Trace.WriteLine($"{nameof(OodleFactory)}: Oddle dll load failed, fallback to game executable...", "DEBUG-MACHINA");
+                        Trace.WriteLine($"{nameof(OodleFactory)}: Oddle dll load failed, fallback to game executable...", "FOX-DEBUG-MACHINA");
                     }
                 }
                 else

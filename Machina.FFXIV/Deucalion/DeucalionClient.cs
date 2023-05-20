@@ -189,7 +189,7 @@ namespace Machina.FFXIV.Deucalion
                 _clientStream.Connect(3000);
                 if (!_clientStream.IsConnected)
                 {
-                    Trace.WriteLine($"DeucalionClient: Unable to connect to named pipe deucalion-{processId}.", "DEBUG-MACHINA");
+                    Trace.WriteLine($"DeucalionClient: Unable to connect to named pipe deucalion-{processId}.", "FOX-DEBUG-MACHINA");
                     return;
                 }
 
@@ -199,7 +199,7 @@ namespace Machina.FFXIV.Deucalion
                 DeucalionMessage result = ReadPipe(buffer, _tokenSource.Token).FirstOrDefault();
                 if (result.header.Opcode != DeucalionOpcode.Debug || !result.debug.StartsWith("SERVER HELLO", StringComparison.OrdinalIgnoreCase))
                 {
-                    Trace.WriteLine($"DeucalionClient: Named pipe connected, but received unexpected response: ({result.header.Opcode} {result.debug}).", "DEBUG-MACHINA");
+                    Trace.WriteLine($"DeucalionClient: Named pipe connected, but received unexpected response: ({result.header.Opcode} {result.debug}).", "FOX-DEBUG-MACHINA");
                     return;
                 }
 
@@ -245,7 +245,7 @@ namespace Machina.FFXIV.Deucalion
             }
             catch (Exception ex)
             {
-                Trace.WriteLine($"DeucalionClient: Exception while setting up connection with Deucalion named pipe.  Data will not be logged.  {ex}", "DEBUG-MACHINA");
+                Trace.WriteLine($"DeucalionClient: Exception while setting up connection with Deucalion named pipe.  Data will not be logged.  {ex}", "FOX-DEBUG-MACHINA");
                 return;
             }
 
@@ -299,7 +299,7 @@ namespace Machina.FFXIV.Deucalion
                     catch (Exception ex)
                     {
                         if (DateTime.UtcNow.Subtract(_lastLoopError).TotalSeconds > 5)
-                            Trace.WriteLine("DeucalionClient: Error in inner ProcessReadLoop. " + ex.ToString(), "DEBUG-MACHINA");
+                            Trace.WriteLine("DeucalionClient: Error in inner ProcessReadLoop. " + ex.ToString(), "FOX-DEBUG-MACHINA");
                         _lastLoopError = DateTime.UtcNow;
                     }
 
@@ -311,7 +311,7 @@ namespace Machina.FFXIV.Deucalion
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("DeucalionClient Error in outer ProcessReadLoop. " + ex.ToString(), "DEBUG-MACHINA");
+                Trace.WriteLine("DeucalionClient Error in outer ProcessReadLoop. " + ex.ToString(), "FOX-DEBUG-MACHINA");
             }
         }
 
@@ -328,7 +328,7 @@ namespace Machina.FFXIV.Deucalion
                 read = readerTask.Result;
             else
             {
-                Trace.WriteLine($"DeucalionClient: ReaderTask did not complete.  Exception: {readerTask.Exception}", "DEBUG-MACHINA");
+                Trace.WriteLine($"DeucalionClient: ReaderTask did not complete.  Exception: {readerTask.Exception}", "FOX-DEBUG-MACHINA");
             }
             if (read == 0)
                 return response.ToArray();
@@ -339,7 +339,7 @@ namespace Machina.FFXIV.Deucalion
             if (_streamBufferIndex + read > _streamBuffer.Length)
             {
                 // buffer is full, but length suggests more data needed.  Reset stream.
-                Trace.WriteLine($"DeucalionClient: Stream Buffer is full.  Discarding data and resetting stream.", "DEBUG-MACHINA");
+                Trace.WriteLine($"DeucalionClient: Stream Buffer is full.  Discarding data and resetting stream.", "FOX-DEBUG-MACHINA");
                 _streamBufferIndex = 0;
                 return response.ToArray();
             }
@@ -388,7 +388,7 @@ namespace Machina.FFXIV.Deucalion
                             //Debug.WriteLine($"DeucalionClient: Received Ping on Channel {newMessage.header.channel}, message: {newMessage.debug}");
                             break;
                         case DeucalionOpcode.Debug:
-                            Trace.WriteLine($"DeucalionClient: Debug Channel {newMessage.header.channel} Opcode {newMessage.header.Opcode} message: {newMessage.debug}", "DEBUG-MACHINA");
+                            Trace.WriteLine($"DeucalionClient: Debug Channel {newMessage.header.channel} Opcode {newMessage.header.Opcode} message: {newMessage.debug}", "FOX-DEBUG-MACHINA");
                             response.Add(newMessage);
                             break;
                         case DeucalionOpcode.Recv:
@@ -400,12 +400,12 @@ namespace Machina.FFXIV.Deucalion
                                 response.Add(newMessage);
                             break;
                         case DeucalionOpcode.Exit:
-                            Trace.WriteLine("DeucalionClient: Received exit opcode from injected code.", "DEBUG-MACHINA");
+                            Trace.WriteLine("DeucalionClient: Received exit opcode from injected code.", "FOX-DEBUG-MACHINA");
                             Disconnect();
                             break;
                         case DeucalionOpcode.Option:
                         default:
-                            Trace.WriteLine($"DeucalionClient: Unexpected opcode {((DeucalionHeader*)ptr)->Opcode} from injected code.", "DEBUG-MACHINA");
+                            Trace.WriteLine($"DeucalionClient: Unexpected opcode {((DeucalionHeader*)ptr)->Opcode} from injected code.", "FOX-DEBUG-MACHINA");
                             break;
                     }
 
@@ -444,7 +444,7 @@ namespace Machina.FFXIV.Deucalion
             writerTask.Wait(token);
             if (!writerTask.IsCompleted || writerTask.Exception != null)
             {
-                Trace.WriteLine($"DeucalionClient: WriterTask did not complete.  Exception: {writerTask.Exception}", "DEBUG-MACHINA");
+                Trace.WriteLine($"DeucalionClient: WriterTask did not complete.  Exception: {writerTask.Exception}", "FOX-DEBUG-MACHINA");
             }
 
             //Debug.WriteLine($"DeucalionClient: Sent Opcode {message.header.Opcode} to channel {message.header.channel}, total length {buffer.Length}");

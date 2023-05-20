@@ -77,7 +77,7 @@ namespace Machina.FFXIV
                             header.magic2 != 0 && header.magic3 != 0)
                         {
                             if (LastMessageTimestamp != DateTime.MinValue)
-                                Trace.WriteLine("FFXIVBundleDecoder: Invalid magic # in header:" + ConversionUtility.ByteArrayToHexString(_bundleBuffer, offset, 36), "DEBUG-MACHINA");
+                                Trace.WriteLine("FFXIVBundleDecoder: Invalid magic # in header:" + ConversionUtility.ByteArrayToHexString(_bundleBuffer, offset, 36), "FOX-DEBUG-MACHINA");
 
                             offset = ResetStream(offset);
                             continue;
@@ -135,7 +135,7 @@ namespace Machina.FFXIV
                                     if (_oodle == null)
                                     {
                                         Trace.WriteLine($"FFXIVBundleDecoder: Bad message offset - offset={message_offset}, bufferSize={messageBufferSize}, " +
-                                            $"data: {ConversionUtility.ByteArrayToHexString(data, 0, 50)}", "DEBUG-MACHINA");
+                                            $"data: {ConversionUtility.ByteArrayToHexString(data, 0, 50)}", "FOX-DEBUG-MACHINA");
                                     }
 
                                     _allocated = 0;
@@ -187,7 +187,7 @@ namespace Machina.FFXIV
                     }
                     catch (Exception ex)
                     {
-                        Trace.WriteLine("FFXIVBundleDecoder: Decompression error: " + ex.ToString(), "DEBUG-MACHINA");
+                        Trace.WriteLine("FFXIVBundleDecoder: Decompression error: " + ex.ToString(), "FOX-DEBUG-MACHINA");
                         return null;
                     }
 
@@ -212,19 +212,19 @@ namespace Machina.FFXIV
                         }
                         else
                         {
-                            Trace.WriteLine("FFXIVBundleDecoder: Oodle Decompression failure.", "DEBUG-MACHINA");
+                            Trace.WriteLine("FFXIVBundleDecoder: Oodle Decompression failure.", "FOX-DEBUG-MACHINA");
                             return null;
                         }
                     }
                     catch (Exception ex)
                     {
-                        Trace.WriteLine("FFXIVBundleDecoder: Oodle Decompression error: " + ex.ToString(), "DEBUG-MACHINA");
+                        Trace.WriteLine("FFXIVBundleDecoder: Oodle Decompression error: " + ex.ToString(), "FOX-DEBUG-MACHINA");
                         return null;
                     }
                     break;
                 default:
                     if (!_encodingError)
-                        Trace.WriteLine($"FFXIVBundleDecoder: unknown bundle: version - {header.version.ToString("X2", CultureInfo.InvariantCulture)}; compression - {header.compression}", "DEBUG-MACHINA");
+                        Trace.WriteLine($"FFXIVBundleDecoder: unknown bundle: version - {header.version.ToString("X2", CultureInfo.InvariantCulture)}; compression - {header.compression}", "FOX-DEBUG-MACHINA");
                     _encodingError = true;
                     return null;
             }

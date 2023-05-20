@@ -53,7 +53,7 @@ namespace Machina.Sockets
             _auth.type = string.IsNullOrEmpty(config.username) ? RPCAP_RMTAUTH_NULL : RPCAP_RMTAUTH_PWD;
             _file = config.file;
             _source = BuildSource(config.host, config.port);
-            Trace.WriteLine($"PCapCaptureSocket: Capture source was set to [{_source}].", "DEBUG-MACHINA");
+            Trace.WriteLine($"PCapCaptureSocket: Capture source was set to [{_source}].", "FOX-DEBUG-MACHINA");
         }
 
         private string BuildSource(string host, int port)
@@ -78,7 +78,7 @@ namespace Machina.Sockets
                 device = devices.FirstOrDefault(x => x.Name.Contains(_file));
                 if (string.IsNullOrWhiteSpace(device?.Name))
                 {
-                    Trace.WriteLine($"PCapCaptureSocket: File [{_file}] does not exist or is not in a valid pcap format.", "DEBUG-MACHINA");
+                    Trace.WriteLine($"PCapCaptureSocket: File [{_file}] does not exist or is not in a valid pcap format.", "FOX-DEBUG-MACHINA");
                     return null;
                 }
                 return device;
@@ -88,14 +88,14 @@ namespace Machina.Sockets
 
             if (string.IsNullOrWhiteSpace(device?.Name))
             {
-                Trace.WriteLine($"PCapCaptureSocket: IP [{new IPAddress(localAddress)}] selected but unable to find corresponding local WinPCap device.", "DEBUG-MACHINA");
+                Trace.WriteLine($"PCapCaptureSocket: IP [{new IPAddress(localAddress)}] selected but unable to find corresponding local WinPCap device.", "FOX-DEBUG-MACHINA");
                 device = devices.FirstOrDefault();
                 if (string.IsNullOrWhiteSpace(device?.Name))
                 {
-                    Trace.WriteLine($"PCapCaptureSocket: Cannot find any WinPCap devices.", "DEBUG-MACHINA");
+                    Trace.WriteLine($"PCapCaptureSocket: Cannot find any WinPCap devices.", "FOX-DEBUG-MACHINA");
                     return null;
                 }
-                Trace.WriteLine($"PCapCaptureSocket: Using pcap interface [{device.Name}] as fallback.", "DEBUG-MACHINA");
+                Trace.WriteLine($"PCapCaptureSocket: Using pcap interface [{device.Name}] as fallback.", "FOX-DEBUG-MACHINA");
             }
             return device;
         }
@@ -166,7 +166,7 @@ namespace Machina.Sockets
                 if (_monitorTask != null)
                 {
                     if (!_monitorTask.Wait(100) || _monitorTask.Status == TaskStatus.Running)
-                        Trace.Write("PCapCaptureSocket: Task cannot be stopped.", "DEBUG-MACHINA");
+                        Trace.Write("PCapCaptureSocket: Task cannot be stopped.", "FOX-DEBUG-MACHINA");
                     else
                         _monitorTask.Dispose();
                 }
@@ -179,7 +179,7 @@ namespace Machina.Sockets
             }
             catch (Exception ex)
             {
-                Trace.WriteLine($"PCapCaptureSocket: Exception cleaning up RawPCap class. {ex}", "DEBUG-MACHINA");
+                Trace.WriteLine($"PCapCaptureSocket: Exception cleaning up RawPCap class. {ex}", "FOX-DEBUG-MACHINA");
             }
         }
 
@@ -218,7 +218,7 @@ namespace Machina.Sockets
                     {
                         string error = Marshal.PtrToStringAnsi(pcap_geterr(_activeDevice.Handle));
                         if (!bExceptionLogged)
-                            Trace.WriteLine($"PCapCaptureSocket: Error from pcap_next_ex. {error}", "DEBUG-MACHINA");
+                            Trace.WriteLine($"PCapCaptureSocket: Error from pcap_next_ex. {error}", "FOX-DEBUG-MACHINA");
 
                         bExceptionLogged = true;
 
@@ -227,7 +227,7 @@ namespace Machina.Sockets
                     else if (status == -2) // no more packets in savefile
                     {
                         if (!bExceptionLogged)
-                            Trace.WriteLine($"PCapCaptureSocket: pcap_next_ex has reached the end of {_activeDevice.Device.Name}.", "DEBUG-MACHINA");
+                            Trace.WriteLine($"PCapCaptureSocket: pcap_next_ex has reached the end of {_activeDevice.Device.Name}.", "FOX-DEBUG-MACHINA");
 
                         bExceptionLogged = true;
 
@@ -236,7 +236,7 @@ namespace Machina.Sockets
                     else if (status != 1) // anything else besides success
                     {
                         if (!bExceptionLogged)
-                            Trace.WriteLine($"PCapCaptureSocket: Unknown response code [{status}] from pcap_next_ex.", "DEBUG-MACHINA");
+                            Trace.WriteLine($"PCapCaptureSocket: Unknown response code [{status}] from pcap_next_ex.", "FOX-DEBUG-MACHINA");
 
                         bExceptionLogged = true;
 
@@ -251,7 +251,7 @@ namespace Machina.Sockets
                         // prepare data - skip the 14-byte ethernet header
                         int allocatedSize = (int)packetHeader.caplen - layer2Length;
                         if (allocatedSize > 0x1000000)
-                            Trace.WriteLine($"PCapCaptureSocket: packet length too large: {allocatedSize} ", "DEBUG-MACHINA");
+                            Trace.WriteLine($"PCapCaptureSocket: packet length too large: {allocatedSize} ", "FOX-DEBUG-MACHINA");
                         else
                         {
                             byte[] buffer = new byte[allocatedSize];
@@ -265,7 +265,7 @@ namespace Machina.Sockets
                 catch (Exception ex)
                 {
                     if (!bExceptionLogged)
-                        Trace.WriteLine("PCapCaptureSocket: Exception during RunCaptureLoop. " + ex.ToString(), "DEBUG-MACHINA");
+                        Trace.WriteLine("PCapCaptureSocket: Exception during RunCaptureLoop. " + ex.ToString(), "FOX-DEBUG-MACHINA");
 
                     bExceptionLogged = true;
 

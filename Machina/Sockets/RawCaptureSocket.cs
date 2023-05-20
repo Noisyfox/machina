@@ -108,13 +108,13 @@ namespace Machina.Sockets
             Process[] processes = Process.GetProcessesByName("Idle");
             if (processes.Length == 0)
             {
-                Trace.WriteLine("RawCaptureSocket: Did not detect Idle process, using TCP socket instead of IP socket for wine compatability.", "DEBUG-MACHINA");
+                Trace.WriteLine("RawCaptureSocket: Did not detect Idle process, using TCP socket instead of IP socket for wine compatability.", "FOX-DEBUG-MACHINA");
                 return false;
             }
 
             if (Environment.GetEnvironmentVariable(WINE_ENV_VAR) == "1")
             {
-                Trace.WriteLine($"RawCaptureSocket: Environment variable {WINE_ENV_VAR} set, forcing wine compatability.", "DEBUG-MACHINA");
+                Trace.WriteLine($"RawCaptureSocket: Environment variable {WINE_ENV_VAR} set, forcing wine compatability.", "FOX-DEBUG-MACHINA");
                 return false;
             }
 
@@ -154,7 +154,7 @@ namespace Machina.Sockets
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("RawSocket: Error while receiving socket data.  Network capture aborted, please restart application." + ex.ToString(), "DEBUG-MACHINA");
+                Trace.WriteLine("RawSocket: Error while receiving socket data.  Network capture aborted, please restart application." + ex.ToString(), "FOX-DEBUG-MACHINA");
             }
         }
 

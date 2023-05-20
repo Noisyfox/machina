@@ -74,7 +74,7 @@ namespace Machina.Decoders
             // There is one TCP packet per buffer.
             if (buffer?.Length < sizeof(TCPHeader))
             {
-                Trace.WriteLine($"TCPDecoder: Buffer length smaller than TCP header: Length=[{buffer?.Length ?? 0}].", "DEBUG-MACHINA");
+                Trace.WriteLine($"TCPDecoder: Buffer length smaller than TCP header: Length=[{buffer?.Length ?? 0}].", "FOX-DEBUG-MACHINA");
                 return;
             }
 
@@ -133,11 +133,11 @@ namespace Machina.Decoders
                                 _NextSequence = header.SequenceNumber + 1;
                             else if (Math.Abs(_NextSequence - header.SequenceNumber) > 100000)
                             {
-                                Trace.WriteLine($"TCPDecoder: Updating sequence number from SYN packet.  Current Sequence: [{_NextSequence}, sent sequence: [{header.SequenceNumber}]", "DEBUG-MACHINA");
+                                Trace.WriteLine($"TCPDecoder: Updating sequence number from SYN packet.  Current Sequence: [{_NextSequence}, sent sequence: [{header.SequenceNumber}]", "FOX-DEBUG-MACHINA");
                                 _NextSequence = header.SequenceNumber + 1;
                             }
                             else
-                                Trace.WriteLine($"TCPDecoder: Ignoring SYN packet new sequence number.  Current Sequence: [{_NextSequence}, sent sequence: [{header.SequenceNumber}].", "DEBUG-MACHINA");
+                                Trace.WriteLine($"TCPDecoder: Ignoring SYN packet new sequence number.  Current Sequence: [{_NextSequence}, sent sequence: [{header.SequenceNumber}].", "FOX-DEBUG-MACHINA");
 
                             continue; // do not process SYN packet, but set next sequence #.
                         }
@@ -151,7 +151,7 @@ namespace Machina.Decoders
                         if (packetOffset >= packets[i].Length - header.DataOffset)
                         {
                             // this packet will get removed once we exit the loop.
-                            Trace.WriteLine($"TCPDecoder: packet data already processed, expected sequence [{_NextSequence}], received [{header.SequenceNumber}], size [{packets[i].Length - header.DataOffset}].  Data: {ConversionUtility.ByteArrayToHexString(packets[i], 0, 50)}", "DEBUG-MACHINA");
+                            Trace.WriteLine($"TCPDecoder: packet data already processed, expected sequence [{_NextSequence}], received [{header.SequenceNumber}], size [{packets[i].Length - header.DataOffset}].  Data: {ConversionUtility.ByteArrayToHexString(packets[i], 0, 50)}", "FOX-DEBUG-MACHINA");
                             continue;
                         }
 
@@ -191,12 +191,12 @@ namespace Machina.Decoders
             {
                 if (LastPacketTimestamp.AddMilliseconds(2000) < DateTime.UtcNow)
                 {
-                    Trace.WriteLine("TCPDecoder: >2 sec since last processed packet, resetting stream.", "DEBUG-MACHINA");
+                    Trace.WriteLine("TCPDecoder: >2 sec since last processed packet, resetting stream.", "FOX-DEBUG-MACHINA");
 
                     for (int i = Packets.Count - 1; i >= 0; i--)
                     {
                         Trace.WriteLine($"TCPDecoder: Missing Sequence # [{_NextSequence}], Dropping packet with sequence # [" +
-                            $"{ConversionUtility.ntohl(BitConverter.ToUInt32(Packets[i], 4))}].", "DEBUG-MACHINA");
+                            $"{ConversionUtility.ntohl(BitConverter.ToUInt32(Packets[i], 4))}].", "FOX-DEBUG-MACHINA");
                         Packets.RemoveAt(i);
                     }
                     _NextSequence = 0;

@@ -147,10 +147,10 @@ namespace Machina.Infrastructure
             {
                 if (connections.Count > 0)
                 {
-                    Trace.WriteLine($"ProcessTCPInfo: Process not found, closing {connections.Count} connections.", "DEBUG-MACHINA");
+                    Trace.WriteLine($"ProcessTCPInfo: Process not found, closing {connections.Count} connections.", "FOX-DEBUG-MACHINA");
                     for (int i = 0; i < connections.Count; i++)
                     {
-                        Trace.WriteLine($"ProcessTCPInfo: Removing connection {connections[i]}", "DEBUG-MACHINA");
+                        Trace.WriteLine($"ProcessTCPInfo: Removing connection {connections[i]}", "FOX-DEBUG-MACHINA");
                         connections[i].Socket?.StopCapture();
                         connections[i].Socket?.Dispose();
                         connections[i].Socket = null;
@@ -228,7 +228,7 @@ namespace Machina.Infrastructure
 
                                 connections.Add(connection);
 
-                                Trace.WriteLine($"ProcessTCPInfo: New connection detected for Process [{entry.dwProcessId}]: {connection}", "DEBUG-MACHINA");
+                                Trace.WriteLine($"ProcessTCPInfo: New connection detected for Process [{entry.dwProcessId}]: {connection}", "FOX-DEBUG-MACHINA");
                             }
                         }
 
@@ -263,7 +263,7 @@ namespace Machina.Infrastructure
                         }
                         if (!found)
                         {
-                            Trace.WriteLine($"ProcessTCPInfo: Removing connection {connections[i]}", "DEBUG-MACHINA");
+                            Trace.WriteLine($"ProcessTCPInfo: Removing connection {connections[i]}", "FOX-DEBUG-MACHINA");
                             connections[i].Socket?.StopCapture();
                             connections[i].Socket?.Dispose();
                             connections[i].Socket = null;
@@ -273,13 +273,13 @@ namespace Machina.Infrastructure
                 }
                 else
                 {
-                    Trace.WriteLine($"ProcessTCPInfo: Unable to retrieve TCP table. Return code: {ret}", "DEBUG-MACHINA");
+                    Trace.WriteLine($"ProcessTCPInfo: Unable to retrieve TCP table. Return code: {ret}", "FOX-DEBUG-MACHINA");
                     throw new System.ComponentModel.Win32Exception(ret);
                 }
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("ProcessTCPInfo: Exception updating TCP connection list." + ex.ToString(), "DEBUG-MACHINA");
+                Trace.WriteLine("ProcessTCPInfo: Exception updating TCP connection list." + ex.ToString(), "FOX-DEBUG-MACHINA");
                 throw new System.ComponentModel.Win32Exception(ret, ex.Message);
             }
             finally

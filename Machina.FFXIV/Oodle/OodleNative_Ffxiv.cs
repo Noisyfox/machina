@@ -95,7 +95,7 @@ namespace Machina.FFXIV.Oodle
             {
                 if (!File.Exists(path))
                 {
-                    Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: ffxiv_dx11 executable at path {path} does not exist.", "DEBUG-MACHINA");
+                    Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: ffxiv_dx11 executable at path {path} does not exist.", "FOX-DEBUG-MACHINA");
                     return;
                 }
 
@@ -115,11 +115,11 @@ namespace Machina.FFXIV.Oodle
                     _libraryHandle = NativeMethods.LoadLibraryW(_libraryTempPath);
                     if (_libraryHandle == IntPtr.Zero)
                     {
-                        Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: Cannot load ffxiv_dx11 executable at path {path}.", "DEBUG-MACHINA");
+                        Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: Cannot load ffxiv_dx11 executable at path {path}.", "FOX-DEBUG-MACHINA");
                         return;
                     }
                     else
-                        Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: Copied and loaded ffxiv_dx11 executable into ACT memory from path {path}.", "DEBUG-MACHINA");
+                        Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: Copied and loaded ffxiv_dx11 executable into ACT memory from path {path}.", "FOX-DEBUG-MACHINA");
 
                     _offsets = _sigscan.Read(_libraryHandle);
 
@@ -175,7 +175,7 @@ namespace Machina.FFXIV.Oodle
                     if (_OodleNetwork1UDP_State_Size == null || _OodleNetwork1_Shared_Size == null || _OodleNetwork1_Shared_SetWindow == null ||
                         _OodleNetwork1UDP_Train == null || _OodleNetwork1UDP_Decode == null || _OodleNetwork1UDP_Encode == null)
                     {
-                        Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: ERROR: Cannot find one or more signatures in ffxiv_dx11 executable.  Unable to decompress packet data.", "DEBUG-MACHINA");
+                        Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: ERROR: Cannot find one or more signatures in ffxiv_dx11 executable.  Unable to decompress packet data.", "FOX-DEBUG-MACHINA");
 
                         UnInitialize();
                         return;
@@ -185,7 +185,7 @@ namespace Machina.FFXIV.Oodle
             }
             catch (Exception ex)
             {
-                Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: Exception in {nameof(Initialize)}. Game path: {path}  Exception: {ex}", "DEBUG-MACHINA");
+                Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: Exception in {nameof(Initialize)}. Game path: {path}  Exception: {ex}", "FOX-DEBUG-MACHINA");
 
                 UnInitialize();
             }
@@ -203,7 +203,7 @@ namespace Machina.FFXIV.Oodle
                     {
                         bool freed = NativeMethods.FreeLibrary(_libraryHandle);
                         if (!freed)
-                            Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: {nameof(NativeMethods.FreeLibrary)} failed.", "DEBUG-MACHINA");
+                            Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: {nameof(NativeMethods.FreeLibrary)} failed.", "FOX-DEBUG-MACHINA");
                         _libraryHandle = IntPtr.Zero;
                     }
 
@@ -215,7 +215,7 @@ namespace Machina.FFXIV.Oodle
                         }
                         catch
                         {
-                            Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: {nameof(NativeMethods.FreeLibrary)} could not delete temp file.", "DEBUG-MACHINA");
+                            Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: {nameof(NativeMethods.FreeLibrary)} could not delete temp file.", "FOX-DEBUG-MACHINA");
                         }
                     }
                     _libraryTempPath = string.Empty;
@@ -236,7 +236,7 @@ namespace Machina.FFXIV.Oodle
             }
             catch (Exception ex)
             {
-                Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: exception in {nameof(UnInitialize)}: {ex}", "DEBUG-MACHINA");
+                Trace.WriteLine($"{nameof(OodleNative_Ffxiv)}: exception in {nameof(UnInitialize)}: {ex}", "FOX-DEBUG-MACHINA");
             }
         }
 

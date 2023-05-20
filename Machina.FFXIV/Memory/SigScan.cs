@@ -91,7 +91,7 @@ namespace Machina.FFXIV.Memory
                     int signature = GetSignaturefromOffset(currentAddress, startAddress, offset);
                     ret.Add(signatureTypes[i], signature);
 
-                    Trace.WriteLine($"Found Signature [{signatureTypes[i]}] at offset [{signature:X8}]", "DEBUG-MACHINA");
+                    Trace.WriteLine($"Found Signature [{signatureTypes[i]}] at offset [{signature:X8}]", "FOX-DEBUG-MACHINA");
 
                     _ = signatureTypes.Remove(signatureTypes[i]);
                 }
@@ -100,7 +100,7 @@ namespace Machina.FFXIV.Memory
             // Missing one or more signatures
             if (signatureTypes.Any())
                 for (int i = 0; i < signatureTypes.Count; i++)
-                    Trace.WriteLine($"{nameof(SigScan)}.{nameof(Read)}: Missing Signature [{signatureTypes[i]}].", "DEBUG-MACHINA");
+                    Trace.WriteLine($"{nameof(SigScan)}.{nameof(Read)}: Missing Signature [{signatureTypes[i]}].", "FOX-DEBUG-MACHINA");
 
             return ret;
         }

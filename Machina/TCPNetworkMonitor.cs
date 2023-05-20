@@ -111,7 +111,7 @@ namespace Machina
             if (_monitorTask != null)
             {
                 if (!_monitorTask.Wait(100) || _monitorTask.Status == TaskStatus.Running)
-                    Trace.Write("TCPNetworkMonitor: Task cannot be stopped.", "DEBUG-MACHINA");
+                    Trace.Write("TCPNetworkMonitor: Task cannot be stopped.", "FOX-DEBUG-MACHINA");
                 else
                     _monitorTask.Dispose();
                 _monitorTask = null;
@@ -144,7 +144,7 @@ namespace Machina
                     catch (Exception ex)
                     {
                         if (DateTime.UtcNow.Subtract(_lastLoopError).TotalSeconds > 5)
-                            Trace.WriteLine("TCPNetworkMonitor Error in ProcessDataLoop inner code: " + ex.ToString(), "DEBUG-MACHINA");
+                            Trace.WriteLine("TCPNetworkMonitor Error in ProcessDataLoop inner code: " + ex.ToString(), "FOX-DEBUG-MACHINA");
                         _lastLoopError = DateTime.UtcNow;
                     }
                     
@@ -160,7 +160,7 @@ namespace Machina
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("TCPNetworkMonitor Error in ProcessDataLoop: " + ex.ToString(), "DEBUG-MACHINA");
+                Trace.WriteLine("TCPNetworkMonitor Error in ProcessDataLoop: " + ex.ToString(), "FOX-DEBUG-MACHINA");
             }
         }
 

@@ -60,11 +60,11 @@ namespace Machina.FFXIV.Oodle
                     _libraryHandle = NativeMethods.LoadLibraryW(path);
                     if (_libraryHandle == IntPtr.Zero)
                     {
-                        Trace.WriteLine($"{nameof(OodleNative_Library)}: Cannot load oodle library at path {path}.", "DEBUG-MACHINA");
+                        Trace.WriteLine($"{nameof(OodleNative_Library)}: Cannot load oodle library at path {path}.", "FOX-DEBUG-MACHINA");
                         return;
                     }
                     else
-                        Trace.WriteLine($"{nameof(OodleNative_Library)}: Loaded oodle library from path {path}.", "DEBUG-MACHINA");
+                        Trace.WriteLine($"{nameof(OodleNative_Library)}: Loaded oodle library from path {path}.", "FOX-DEBUG-MACHINA");
 
                     IntPtr address = NativeMethods.GetProcAddress(_libraryHandle, nameof(OodleNetwork1UDP_State_Size));
                     _OodleNetwork1UDP_State_Size = (OodleNetwork1UDP_State_Size_Func)Marshal.GetDelegateForFunctionPointer(
@@ -111,7 +111,7 @@ namespace Machina.FFXIV.Oodle
             }
             catch (Exception ex)
             {
-                Trace.WriteLine($"{nameof(OodleNative_Library)}: Exception in {nameof(Initialize)}. Library path: {path}  Exception: {ex}", "DEBUG-MACHINA");
+                Trace.WriteLine($"{nameof(OodleNative_Library)}: Exception in {nameof(Initialize)}. Library path: {path}  Exception: {ex}", "FOX-DEBUG-MACHINA");
 
                 UnInitialize();
             }
@@ -129,7 +129,7 @@ namespace Machina.FFXIV.Oodle
                     {
                         bool freed = NativeMethods.FreeLibrary(_libraryHandle);
                         if (!freed)
-                            Trace.WriteLine($"{nameof(OodleNative_Library)}: {nameof(NativeMethods.FreeLibrary)} failed.", "DEBUG-MACHINA");
+                            Trace.WriteLine($"{nameof(OodleNative_Library)}: {nameof(NativeMethods.FreeLibrary)} failed.", "FOX-DEBUG-MACHINA");
                         _libraryHandle = IntPtr.Zero;
                     }
 
@@ -147,7 +147,7 @@ namespace Machina.FFXIV.Oodle
             }
             catch (Exception ex)
             {
-                Trace.WriteLine($"{nameof(OodleNative_Library)}: exception in {nameof(UnInitialize)}: {ex}", "DEBUG-MACHINA");
+                Trace.WriteLine($"{nameof(OodleNative_Library)}: exception in {nameof(UnInitialize)}: {ex}", "FOX-DEBUG-MACHINA");
             }
         }
 

@@ -79,7 +79,7 @@ namespace Machina
                 {
                     Trace.WriteLine("TCPNetworkMonitor: Stopping " + Config.MonitorType.ToString() + " listener between [" +
                         new IPAddress(Connections[i].LocalIP).ToString() + "] => [" +
-                        new IPAddress(Connections[i].RemoteIP).ToString() + "].", "DEBUG-MACHINA");
+                        new IPAddress(Connections[i].RemoteIP).ToString() + "].", "FOX-DEBUG-MACHINA");
 
                     Connections[i].Socket.StopCapture();
                     Connections[i].Socket?.Dispose();
