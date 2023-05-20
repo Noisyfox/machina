@@ -483,6 +483,7 @@ namespace Machina.FFXIV.Deucalion
                     headerPtr->MessageLength = (uint)convertedMessage.Length;
                     headerPtr->LoginUserID = segmentPtr->target_actor;
                     headerPtr->ActorID = segmentPtr->source_actor;
+                    headerPtr->SegmentType = 3;  // IPC segment
                     headerPtr->Unknown2 = segmentPtr->reserved;
                     headerPtr->MessageType = segmentPtr->type;
                     headerPtr->Seconds = segmentPtr->seconds;

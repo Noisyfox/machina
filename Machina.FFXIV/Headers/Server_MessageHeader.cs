@@ -28,7 +28,9 @@ namespace Machina.FFXIV.Headers
         [FieldOffset(8)]
         public uint LoginUserID;
         [FieldOffset(12)]
-        public uint Unknown1;
+        public ushort SegmentType;
+        [FieldOffset(14)]
+        public ushort Unknown1;
         [FieldOffset(16)]
         public ushort Unknown2;
         [FieldOffset(18)]
