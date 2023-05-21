@@ -162,20 +162,20 @@ namespace Machina.FFXIV.Deucalion
         private readonly byte[] _streamBuffer = new byte[short.MaxValue * 2];
         private int _streamBufferIndex;
 
-        public delegate void MessageReceivedHandler(byte[] message);
+        public delegate void MessageReceivedHandler(byte[] message, bool isRawSegment);
         public MessageReceivedHandler MessageReceived;
 
-        public delegate void MessageSentHandler(byte[] message);
+        public delegate void MessageSentHandler(byte[] message, bool isRawSegment);
         public MessageSentHandler MessageSent;
 
-        public void OnMessageReceived(byte[] message)
+        public void OnMessageReceived(byte[] message, bool isRawSegment = false)
         {
-            MessageReceived?.Invoke(message);
+            MessageReceived?.Invoke(message, isRawSegment);
         }
 
-        public void OnMessageSent(byte[] message)
+        public void OnMessageSent(byte[] message, bool isRawSegment = false)
         {
-            MessageSent?.Invoke(message);
+            MessageSent?.Invoke(message, isRawSegment);
         }
 
         public unsafe void Connect(int processId)
@@ -208,7 +208,7 @@ namespace Machina.FFXIV.Deucalion
                 {
                     header = new DeucalionHeader()
                     {
-                        channel = (DeucalionChannel)(DeucalionFilter.AllowReceivedZone | DeucalionFilter.AllowSentZone),
+                        channel = (DeucalionChannel)(DeucalionFilter.AllowReceivedZone | DeucalionFilter.AllowSentZone | DeucalionFilter.AllowOther),
                         Opcode = DeucalionOpcode.Option
                     },
                     data = Array.Empty<byte>()
@@ -290,6 +290,10 @@ namespace Machina.FFXIV.Deucalion
                                 OnMessageReceived(message.data);
                             if (message.header.Opcode == DeucalionOpcode.Send)
                                 OnMessageSent(message.data);
+                            if (message.header.Opcode == DeucalionOpcode.RecvOther)
+                                OnMessageReceived(message.data, true);
+                            if (message.header.Opcode == DeucalionOpcode.SendOther)
+                                OnMessageSent(message.data, true);
                         }
                     }
                     catch (OperationCanceledException)
@@ -392,10 +396,12 @@ namespace Machina.FFXIV.Deucalion
                             response.Add(newMessage);
                             break;
                         case DeucalionOpcode.Recv:
+                        case DeucalionOpcode.RecvOther:
                             if (messagePtr->channel == DeucalionChannel.Zone)
                                 response.Add(newMessage);
                             break;
                         case DeucalionOpcode.Send:
+                        case DeucalionOpcode.SendOther:
                             if (messagePtr->channel == DeucalionChannel.Zone)
                                 response.Add(newMessage);
                             break;
