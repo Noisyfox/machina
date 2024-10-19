@@ -42,7 +42,6 @@
       <Compile Remove="Deucalion\DeucalionInjector.cs" />
     </ItemGroup>
  
-    <ItemGroup>
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='NuGet|netstandard2.0|AnyCPU'">
       <Optimize>True</Optimize>
     </PropertyGroup>
